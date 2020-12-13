@@ -80,7 +80,42 @@ describe('app endpoint', () => {
     //Put test teams
 
     //delete test teams
+    it('deletes a row in players based on :id', async() => {
+        await request(app)
+          .post('/api/v1/teams')
+          .send({
+            city: 'Portland, OR',
+            mascot: 'Trail Blazers',
+            division: 'Northwest',
+            conference: 'Western'
+          });
 
+        await request(app)
+          .post('/api/v1/teams')
+          .send({
+            city: 'Los Angeles, CA',
+            mascot: 'Lakers',
+            division: 'Southwest',
+            conference: 'Western'
+          });
+          
+        const id = 1;
+        await request(app)
+            .delete(`/api/v1/teams/${id}`);
+        
+        const response = await request(app)
+            .get('/api/v1/teams/'); 
+    
+        expect(response.body).toEqual([
+            {
+                id: '2',
+                city: 'Los Angeles, CA',
+                mascot: 'Lakers',
+                division: 'Southwest',
+                conference: 'Western'
+            }
+        ]);
+      });
 
 
     //Post for player
@@ -167,7 +202,51 @@ describe('app endpoint', () => {
     //Put test player
 
     //delete test player
+    it('deletes a row in players based on :id', async() => {
+        await request(app)
+          .post('/api/v1/teams')
+          .send({
+            city: 'Portland, OR',
+            mascot: 'Trail Blazers',
+            division: 'Northwest',
+            conference: 'Western'
+          });
 
+        await request(app)
+          .post('/api/v1/players')
+          .send({
+            first_name: 'Damian',
+            last_name: 'Lillard',
+            jersey_number: 0,
+            team_id: 1
+          });
+
+        await request(app)
+          .post('/api/v1/players')
+          .send({
+            first_name: 'CJ',
+            last_name: 'McCollum',
+            jersey_number: 3,
+            team_id: 1
+          });
+          
+        const id = 1;
+        await request(app)
+            .delete(`/api/v1/players/${id}`);
+        
+        const response = await request(app)
+            .get('/api/v1/players/'); 
+    
+        expect(response.body).toEqual([
+            {
+                id: '2',
+                first_name: 'CJ',
+                last_name: 'McCollum',
+                jersey_number: '3',
+                team_id: '1'
+            }
+        ]);
+      });
 
 
 
