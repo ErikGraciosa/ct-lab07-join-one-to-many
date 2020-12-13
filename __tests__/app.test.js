@@ -18,10 +18,10 @@ describe('app endpoint', () => {
       const res = await request(app)
         .post('/api/v1/teams')
         .send({
-          city: 'Portland, OR',
-          mascot: 'Trail Blazers',
-          division: 'Northwest',
-          conference: 'Western'
+            city: 'Portland, OR',
+            mascot: 'Trail Blazers',
+            division: 'Northwest',
+            conference: 'Western'
         });
         
       expect(res.body).toEqual({
@@ -34,7 +34,7 @@ describe('app endpoint', () => {
     });
 
     //Get all test teams
-    it('creates a new team via POST', async() => {
+    it('gets all teams after posting two teams', async() => {
         await request(app)
           .post('/api/v1/teams')
           .send({
@@ -72,7 +72,7 @@ describe('app endpoint', () => {
                 conference: 'Western'
             }
         ]);
-      });
+    });
 
 
     //Get by ID test teams
@@ -84,7 +84,33 @@ describe('app endpoint', () => {
 
 
     //Post for player
-
+    it('creates a new player via POST', async() => {
+        await request(app)
+          .post('/api/v1/teams')
+          .send({
+            city: 'Portland, OR',
+            mascot: 'Trail Blazers',
+            division: 'Northwest',
+            conference: 'Western'
+          });
+        
+        const res = await request(app)
+          .post('/api/v1/players')
+          .send({
+            first_name: 'Damian',
+            last_name: 'Lillard',
+            jersey_number: 0,
+            team_id: 1
+          });
+          
+        expect(res.body).toEqual({
+            id: '1',
+            first_name: 'Damian',
+            last_name: 'Lillard',
+            jersey_number: '0',
+            team_id: '1'
+        });
+    });
     //Get all test player
 
     //Get by ID test player
