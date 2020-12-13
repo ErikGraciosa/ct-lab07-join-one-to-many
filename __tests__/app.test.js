@@ -2,8 +2,8 @@ const fs = require('fs');
 const request = require('supertest');
 const app = require('../lib/app');
 const pool = require('../lib/utils/pool');
-// const Team = require('../lib/models/Team');
-// const Player = require('../lib/models/Player');
+const Team = require('../lib/models/Team');
+const Player = require('../lib/models/Player');
 
 describe('app endpoint', () => {
     beforeEach(() => {
@@ -32,4 +32,68 @@ describe('app endpoint', () => {
         conference: 'Western'
       });
     });
+
+    //Get all test teams
+    it('creates a new team via POST', async() => {
+        await request(app)
+          .post('/api/v1/teams')
+          .send({
+            city: 'Portland, OR',
+            mascot: 'Trail Blazers',
+            division: 'Northwest',
+            conference: 'Western'
+          });
+
+          await request(app)
+          .post('/api/v1/teams')
+          .send({
+            city: 'Los Angeles, CA',
+            mascot: 'Lakers',
+            division: 'Southwest',
+            conference: 'Western'
+          });
+
+        const res = await request(app)
+          .get('/api/v1/teams');
+          
+        expect(res.body).toEqual([
+            {
+                id: '1',
+                city: 'Portland, OR',
+                mascot: 'Trail Blazers',
+                division: 'Northwest',
+                conference: 'Western'
+            },
+            {
+                id: '2',
+                city: 'Los Angeles, CA',
+                mascot: 'Lakers',
+                division: 'Southwest',
+                conference: 'Western'
+            }
+        ]);
+      });
+
+
+    //Get by ID test teams
+
+    //Put test teams
+
+    //delete test teams
+
+
+
+    //Post for player
+
+    //Get all test player
+
+    //Get by ID test player
+
+    //Put test player
+
+    //delete test player
+
+
+
+
   });
