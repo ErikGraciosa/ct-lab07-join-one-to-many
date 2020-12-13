@@ -112,6 +112,55 @@ describe('app endpoint', () => {
         });
     });
     //Get all test player
+    it('gets all teams after posting two teams', async() => {
+        await request(app)
+          .post('/api/v1/teams')
+          .send({
+            city: 'Portland, OR',
+            mascot: 'Trail Blazers',
+            division: 'Northwest',
+            conference: 'Western'
+          });
+
+        await request(app)
+          .post('/api/v1/players')
+          .send({
+            first_name: 'Damian',
+            last_name: 'Lillard',
+            jersey_number: 0,
+            team_id: 1
+          });
+
+        await request(app)
+          .post('/api/v1/players')
+          .send({
+            first_name: 'CJ',
+            last_name: 'McCollum',
+            jersey_number: 3,
+            team_id: 1
+          });
+          
+
+        const res = await request(app)
+          .get('/api/v1/players');
+          
+        expect(res.body).toEqual([
+            {
+                id: '1',
+                first_name: 'Damian',
+                last_name: 'Lillard',
+                jersey_number: '0',
+                team_id: '1'
+            },
+            {
+                id: '2',
+                first_name: 'CJ',
+                last_name: 'McCollum',
+                jersey_number: '3',
+                team_id: '1'
+            }
+        ]);
+    });
 
     //Get by ID test player
 
