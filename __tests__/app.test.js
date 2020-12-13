@@ -79,6 +79,47 @@ describe('app endpoint', () => {
 
     //Put test teams
 
+    it('updates values for a team based on id', async() => {
+        await request(app)
+          .post('/api/v1/teams')
+          .send({
+            city: 'Portland, OR',
+            mascot: 'Trail Blazers',
+            division: 'Northwest',
+            conference: 'Western'
+          });
+
+          await request(app)
+          .post('/api/v1/teams')
+          .send({
+            city: 'Los Angeles, CA',
+            mascot: 'Lakers',
+            division: 'Southwest',
+            conference: 'Western'
+          });
+          
+        const id = 2;
+        const res = await request(app)
+          .put(`/api/v1/teams/${id}`)
+          .send({
+            city: 'Miami, FL',
+            mascot: 'Heat',
+            division: 'Southeast',
+            conference: 'Eastern'
+          })
+        expect(res.body).toEqual(
+            {
+                id: '2',
+                city: 'Miami, FL',
+                mascot: 'Heat',
+                division: 'Southeast',
+                conference: 'Eastern'
+            }
+        );
+    });
+
+
+
     //delete test teams
     it('deletes a row in players based on :id', async() => {
         await request(app)
@@ -147,7 +188,7 @@ describe('app endpoint', () => {
         });
     });
     //Get all test player
-    it('gets all teams after posting two teams', async() => {
+    it('gets all teams after posting two players', async() => {
         await request(app)
           .post('/api/v1/teams')
           .send({
@@ -198,8 +239,103 @@ describe('app endpoint', () => {
     });
 
     //Get by ID test player
+    it('gets a single player by id after posting two players', async() => {
+        await request(app)
+          .post('/api/v1/teams')
+          .send({
+            city: 'Portland, OR',
+            mascot: 'Trail Blazers',
+            division: 'Northwest',
+            conference: 'Western'
+          });
 
-    //Put test player
+        await request(app)
+          .post('/api/v1/players')
+          .send({
+            first_name: 'Damian',
+            last_name: 'Lillard',
+            jersey_number: 0,
+            team_id: 1
+          });
+
+        await request(app)
+          .post('/api/v1/players')
+          .send({
+            first_name: 'CJ',
+            last_name: 'McCollum',
+            jersey_number: 3,
+            team_id: 1
+          });
+          
+        const id = 2;
+        const res = await request(app)
+          .get(`/api/v1/players/${id}`);
+          
+        expect(res.body).toEqual(
+            {
+                id: '2',
+                first_name: 'CJ',
+                last_name: 'McCollum',
+                jersey_number: '3',
+                team_id: '1'
+            }
+        );
+    });
+
+
+    //Put test player by id
+
+    it('updates values for a player based on id', async() => {
+        await request(app)
+          .post('/api/v1/teams')
+          .send({
+            city: 'Portland, OR',
+            mascot: 'Trail Blazers',
+            division: 'Northwest',
+            conference: 'Western'
+          });
+
+        await request(app)
+          .post('/api/v1/players')
+          .send({
+            first_name: 'Damian',
+            last_name: 'Lillard',
+            jersey_number: 0,
+            team_id: 1
+          });
+
+        await request(app)
+          .post('/api/v1/players')
+          .send({
+            first_name: 'CJ',
+            last_name: 'McCollum',
+            jersey_number: 3,
+            team_id: 1
+          });
+          
+        const id = 2;
+        const res = await request(app)
+          .put(`/api/v1/players/${id}`)
+          .send({
+            first_name: 'Jusif',
+            last_name: 'Nurkic',
+            jersey_number: 27,
+            team_id: 1
+          })
+        expect(res.body).toEqual(
+            {
+                id: '2',
+                first_name: 'Jusif',
+                last_name: 'Nurkic',
+                jersey_number: '27',
+                team_id: '1'
+            }
+        );
+    });
+
+
+
+
 
     //delete test player
     it('deletes a row in players based on :id', async() => {
