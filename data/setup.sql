@@ -11,8 +11,8 @@ CREATE TABLE teams (
 
 CREATE TABLE players (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    firstName TEXT NOT NULL,
-    lastName TEXT NOT NULL,
-    jereseyNumber BIGINT,
+    first_name TEXT NOT NULL,
+    last_name TEXT NOT NULL,
+    jersey_number BIGINT,
     team_id BIGINT REFERENCES teams(id)    
 );
