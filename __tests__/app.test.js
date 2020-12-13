@@ -75,7 +75,48 @@ describe('app endpoint', () => {
     });
 
 
-    //Get by ID test teams
+    //Get by ID test teams and join players table.
+    it('get based on :id for team with player table joined in an array', async() => {
+        await request(app)
+          .post('/api/v1/teams')
+          .send({
+            city: 'Portland, OR',
+            mascot: 'Trail Blazers',
+            division: 'Northwest',
+            conference: 'Western'
+          });
+
+        const players = await Promise.all([
+          {
+            first_name: 'Damian',
+            last_name: 'Lillard',
+            jersey_number: '0',
+            team_id: '1'
+          },
+          {
+            first_name: 'CJ',
+            last_name: 'McCollum',
+            jersey_number: '3',
+            team_id: '1'
+          }
+        ].map(player => Player.insert(player)));
+          
+        const id = 1;
+        const response = await request(app)
+            .get(`/api/v1/teams/${id}`);
+         
+        console.log(response.body)
+        expect(response.body).toEqual(
+            {
+                id: '1',
+                city: 'Portland, OR',
+                mascot: 'Trail Blazers',
+                division: 'Northwest',
+                conference: 'Western', 
+                players: expect.arrayContaining(players)
+            }
+        );
+      });
 
     //Put test teams
 
